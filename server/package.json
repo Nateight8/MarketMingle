@@ -12,6 +12,8 @@
   "type": "module",
   "dependencies": {
     "@apollo/server": "^4.11.2",
+    "@auth/drizzle-adapter": "^1.7.4",
+    "@auth/express": "^0.8.4",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "drizzle-orm": "^0.37.0",
@@ -19,6 +21,7 @@
     "graphql": "^16.9.0",
     "graphql-tag": "^2.12.6",
     "lodash.merge": "^4.6.2",
+    "nanoid": "^5.0.9",
     "postgres": "^3.4.5"
   },
   "devDependencies": {

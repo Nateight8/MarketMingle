@@ -11,6 +11,7 @@ import {
 // have a function to create a client for you
 function makeClient() {
   const httpLink = new HttpLink({
+    credentials: "include",
     // this needs to be an absolute url, as relative urls cannot be used in SSR
     uri: "http://localhost:4000/graphql",
     // you can disable result caching here if you want to

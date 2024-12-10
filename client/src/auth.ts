@@ -17,18 +17,24 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     // passkey,
   ],
 
+  session: {
+    strategy: "database",
+  },
+
+  secret: process.env.AUTH_SECRET,
+
   callbacks: {
-    async session({ session, user }) {
+    session({ session, user }) {
       session.user.id = user.id;
       return session;
     },
   },
 
-  experimental: { enableWebAuthn: true },
+  // experimental: { enableWebAuthn: true },
 
-  pages: {
-    error: "/en/auth/error",
-    signIn: "/en/auth/error",
-    verifyRequest: "/en/auth/verify",
-  },
+  // pages: {
+  //   error: "/en/auth/error",
+  //   signIn: "/en/auth/error",
+  //   verifyRequest: "/en/auth/verify",
+  // },
 });

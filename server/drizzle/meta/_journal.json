@@ -15,6 +15,27 @@
       "when": 1733603011244,
       "tag": "0001_elite_galactus",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1733615488671,
+      "tag": "0002_mean_human_robot",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1733616097075,
+      "tag": "0003_massive_nick_fury",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1733616204592,
+      "tag": "0004_wild_maelstrom",
+      "breakpoints": true
     }
   ]
 }

@@ -1,22 +1,38 @@
 import { ApolloServer } from "@apollo/server";
 import { expressMiddleware } from "@apollo/server/express4";
 import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
-import express from "express";
+import express, { NextFunction } from "express";
 import http from "http";
 import cors from "cors";
 import resolvers from "./resolvers/index.js";
 import typeDefs from "./typeDefs/index.js";
+import { ExpressAuth, getSession } from "@auth/express";
+import { authConfig } from "./config/auth.config.js";
+import { currentSession } from "./middleware/auth.middleware.js";
 
 interface MyContext {
   token?: String;
 }
 
+const corsOptions = {
+  origin: process.env.BASE_URL,
+  credentials: true,
+};
+
 const app = express();
 const httpServer = http.createServer(app);
+
+// Set session in res.locals
+app.use(currentSession);
+
+// Set up ExpressAuth to handle authentication
+// IMPORTANT: It is highly encouraged set up rate limiting on this route
+app.use("/api/auth/*", ExpressAuth(authConfig));
 
 const server = new ApolloServer<MyContext>({
   typeDefs,
   resolvers,
+  csrfPrevention: true,
   plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
 });
 
@@ -24,10 +40,17 @@ await server.start();
 
 app.use(
   "/graphql",
-  cors<cors.CorsRequest>(),
+  cors<cors.CorsRequest>(corsOptions),
   express.json(),
   expressMiddleware(server, {
-    context: async ({ req }) => ({ token: req.headers.token }),
+    context: async ({ req, res }) => {
+      const session = res.locals.session;
+
+      console.log("SESSION:", res.locals);
+      console.log("Cookies:", req.headers.cookie);
+
+      return { token: req.headers.token };
+    },
   })
 );
 
