@@ -8,6 +8,7 @@ import {
   uniqueIndex,
   boolean,
   pgEnum,
+  uuid,
 } from "drizzle-orm/pg-core";
 import type { AdapterAccount } from "next-auth/adapters";
 import postgres from "postgres";
@@ -18,7 +19,7 @@ const pool = postgres(connectionString, { max: 1 });
 export const db = drizzle(pool);
 
 export const users = pgTable("user", {
-  id: text("id")
+  id: uuid("id")
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
   name: text("name"),
@@ -38,7 +39,7 @@ export const users = pgTable("user", {
 export const accounts = pgTable(
   "account",
   {
-    userId: text("userId")
+    userId: uuid("userId")
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
     type: text("type").$type<AdapterAccount["type"]>().notNull(),
@@ -60,8 +61,8 @@ export const accounts = pgTable(
 );
 
 export const sessions = pgTable("session", {
-  sessionToken: text("sessionToken").primaryKey(),
-  userId: text("userId")
+  sessionToken: uuid("sessionToken").primaryKey(),
+  userId: uuid("userId")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
   expires: timestamp("expires", { mode: "date" }).notNull(),
@@ -71,7 +72,7 @@ export const verificationNumberSessions = pgTable(
   "verificationNumberSessions",
   {
     verificationNumber: text("verificationNumber").notNull(),
-    userId: text("userId")
+    userId: uuid("userId")
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
     createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
@@ -98,12 +99,12 @@ export const verificationTokens = pgTable(
 export const Authenticator = pgTable(
   "authenticator",
   {
-    id: text("id")
+    id: uuid("id")
       .notNull()
       .primaryKey()
       .$defaultFn(() => genId("ath")),
     credentialID: text("credentialId").notNull(),
-    userId: text("userId")
+    userId: uuid("userId")
       .notNull()
       .references(() => users.id, { onDelete: "cascade", onUpdate: "cascade" }),
     providerAccountId: text("providerAccountId").notNull(),

@@ -8,11 +8,10 @@ import {
 } from "drizzle-orm/pg-core";
 
 export const users = pgTable("user", {
-  id: text("id")
+  id: uuid("id")
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
   name: text("name"),
-  age: integer("age").notNull(),
   email: text("email").notNull(),
   emailVerified: timestamp("emailVerified", { mode: "date" }),
   image: text("image"),

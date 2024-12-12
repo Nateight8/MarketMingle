@@ -1,5 +1,5 @@
 {
-  "id": "aacfecd3-8257-4a82-a0d7-4dd22e2ab402",
+  "id": "0ccb8a04-30d1-4f70-827b-b7d8eb69e27f",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -10,7 +10,7 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "text",
+          "type": "uuid",
           "primaryKey": true,
           "notNull": true
         },
@@ -22,7 +22,7 @@
         },
         "userId": {
           "name": "userId",
-          "type": "text",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
@@ -107,7 +107,7 @@
       "columns": {
         "userId": {
           "name": "userId",
-          "type": "text",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
@@ -202,491 +202,19 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.checkoutSession": {
-      "name": "checkoutSession",
-      "schema": "",
-      "columns": {
-        "buyerId": {
-          "name": "buyerId",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "productId": {
-          "name": "productId",
-          "type": "text",
-          "primaryKey": true,
-          "notNull": true
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "checkoutSession_buyerId_user_id_fk": {
-          "name": "checkoutSession_buyerId_user_id_fk",
-          "tableFrom": "checkoutSession",
-          "tableTo": "user",
-          "columnsFrom": [
-            "buyerId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "checkoutSession_productId_product_id_fk": {
-          "name": "checkoutSession_productId_product_id_fk",
-          "tableFrom": "checkoutSession",
-          "tableTo": "product",
-          "columnsFrom": [
-            "productId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.conversations": {
-      "name": "conversations",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "buyerId": {
-          "name": "buyerId",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "sellerId": {
-          "name": "sellerId",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "productId": {
-          "name": "productId",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "status": {
-          "name": "status",
-          "type": "status",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "'open'"
-        },
-        "createdAt": {
-          "name": "createdAt",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        },
-        "message1": {
-          "name": "message1",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "message2": {
-          "name": "message2",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "delay": {
-          "name": "delay",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "conversations_buyerId_user_id_fk": {
-          "name": "conversations_buyerId_user_id_fk",
-          "tableFrom": "conversations",
-          "tableTo": "user",
-          "columnsFrom": [
-            "buyerId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "conversations_sellerId_user_id_fk": {
-          "name": "conversations_sellerId_user_id_fk",
-          "tableFrom": "conversations",
-          "tableTo": "user",
-          "columnsFrom": [
-            "sellerId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "conversations_productId_product_id_fk": {
-          "name": "conversations_productId_product_id_fk",
-          "tableFrom": "conversations",
-          "tableTo": "product",
-          "columnsFrom": [
-            "productId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {
-        "conversations_buyerId_productId_pk": {
-          "name": "conversations_buyerId_productId_pk",
-          "columns": [
-            "buyerId",
-            "productId"
-          ]
-        }
-      },
-      "uniqueConstraints": {
-        "conversations_id_unique": {
-          "name": "conversations_id_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "id"
-          ]
-        }
-      },
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.favorites": {
-      "name": "favorites",
-      "schema": "",
-      "columns": {
-        "userId": {
-          "name": "userId",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "productId": {
-          "name": "productId",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "favorites_userId_user_id_fk": {
-          "name": "favorites_userId_user_id_fk",
-          "tableFrom": "favorites",
-          "tableTo": "user",
-          "columnsFrom": [
-            "userId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "favorites_productId_product_id_fk": {
-          "name": "favorites_productId_product_id_fk",
-          "tableFrom": "favorites",
-          "tableTo": "product",
-          "columnsFrom": [
-            "productId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {
-        "favorites_userId_productId_pk": {
-          "name": "favorites_userId_productId_pk",
-          "columns": [
-            "userId",
-            "productId"
-          ]
-        }
-      },
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.messages": {
-      "name": "messages",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "text",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "content": {
-          "name": "content",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "senderId": {
-          "name": "senderId",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "conversationId": {
-          "name": "conversationId",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "productId": {
-          "name": "productId",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "timestamp": {
-          "name": "timestamp",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        },
-        "isSystemMessage": {
-          "name": "isSystemMessage",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": true,
-          "default": false
-        },
-        "wasRead": {
-          "name": "wasRead",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": true,
-          "default": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "messages_senderId_user_id_fk": {
-          "name": "messages_senderId_user_id_fk",
-          "tableFrom": "messages",
-          "tableTo": "user",
-          "columnsFrom": [
-            "senderId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "messages_conversationId_conversations_id_fk": {
-          "name": "messages_conversationId_conversations_id_fk",
-          "tableFrom": "messages",
-          "tableTo": "conversations",
-          "columnsFrom": [
-            "conversationId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "messages_productId_product_id_fk": {
-          "name": "messages_productId_product_id_fk",
-          "tableFrom": "messages",
-          "tableTo": "product",
-          "columnsFrom": [
-            "productId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.product": {
-      "name": "product",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "text",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "title": {
-          "name": "title",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "description": {
-          "name": "description",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "price": {
-          "name": "price",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "location": {
-          "name": "location",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "category": {
-          "name": "category",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "sellerId": {
-          "name": "sellerId",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "createdAt": {
-          "name": "createdAt",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        },
-        "imageUrl1": {
-          "name": "imageUrl1",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "imageUrl2": {
-          "name": "imageUrl2",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "imageUrl3": {
-          "name": "imageUrl3",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "imageUrl4": {
-          "name": "imageUrl4",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "imageUrl5": {
-          "name": "imageUrl5",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "stripeId": {
-          "name": "stripeId",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "paymentLink": {
-          "name": "paymentLink",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "isDirectlyBuyable": {
-          "name": "isDirectlyBuyable",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "isSold": {
-          "name": "isSold",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "product_sellerId_user_id_fk": {
-          "name": "product_sellerId_user_id_fk",
-          "tableFrom": "product",
-          "tableTo": "user",
-          "columnsFrom": [
-            "sellerId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
     "public.session": {
       "name": "session",
       "schema": "",
       "columns": {
         "sessionToken": {
           "name": "sessionToken",
-          "type": "text",
+          "type": "uuid",
           "primaryKey": true,
           "notNull": true
         },
         "userId": {
           "name": "userId",
-          "type": "text",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
@@ -719,97 +247,13 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.transactions": {
-      "name": "transactions",
-      "schema": "",
-      "columns": {
-        "buyerId": {
-          "name": "buyerId",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "sellerId": {
-          "name": "sellerId",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "productId": {
-          "name": "productId",
-          "type": "text",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "price": {
-          "name": "price",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "createdAt": {
-          "name": "createdAt",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "transactions_buyerId_user_id_fk": {
-          "name": "transactions_buyerId_user_id_fk",
-          "tableFrom": "transactions",
-          "tableTo": "user",
-          "columnsFrom": [
-            "buyerId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "transactions_sellerId_user_id_fk": {
-          "name": "transactions_sellerId_user_id_fk",
-          "tableFrom": "transactions",
-          "tableTo": "user",
-          "columnsFrom": [
-            "sellerId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "transactions_productId_product_id_fk": {
-          "name": "transactions_productId_product_id_fk",
-          "tableFrom": "transactions",
-          "tableTo": "product",
-          "columnsFrom": [
-            "productId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
     "public.user": {
       "name": "user",
       "schema": "",
       "columns": {
         "id": {
           "name": "id",
-          "type": "text",
+          "type": "uuid",
           "primaryKey": true,
           "notNull": true
         },
@@ -908,7 +352,7 @@
         },
         "userId": {
           "name": "userId",
-          "type": "text",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },

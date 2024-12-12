@@ -12,14 +12,12 @@ export const userResolver = {
       _: any,
       { name, age, email }: { name: string; age: number; email: string }
     ) => {
-      const [newUser] = await db
-        .insert(users)
-        .values({ name, age, email })
-        .returning();
-
-      console.log(newUser);
-
-      return newUser;
+      // const [newUser] = await db
+      //   .insert(users)
+      //   .values({ name, age, email })
+      //   .returning();
+      // console.log(newUser);
+      // return newUser;
     },
   },
 };
