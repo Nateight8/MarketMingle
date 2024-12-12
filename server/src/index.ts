@@ -46,7 +46,7 @@ app.use(
     context: async ({ req, res }) => {
       const session = res.locals.session;
 
-      console.log("SESSION:", res.locals);
+      console.log("SESSION:", res.locals.session);
       console.log("Cookies:", req.headers.cookie);
 
       return { token: req.headers.token };

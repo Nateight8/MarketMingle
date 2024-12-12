@@ -35,6 +35,15 @@ export async function currentSession(
       ...authConfig, //spread the config so i can configure session strategy to database
       session: { strategy: "database" }, //session strategy = database requires the adapter
       adapter: DrizzleAdapter(db),
+
+      //callbacks
+      callbacks: {
+        session({ session, user }) {
+          session.user.id = user.id;
+
+          return session;
+        },
+      },
     })) ?? undefined;
 
   res.locals.session = session; //sets session to res.locals.session, this is how we get the session
