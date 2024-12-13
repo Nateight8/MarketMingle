@@ -1,5 +1,5 @@
 {
-  "id": "0ccb8a04-30d1-4f70-827b-b7d8eb69e27f",
+  "id": "8f887848-9097-47f9-bc32-a5d218418ec2",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -434,19 +434,7 @@
       "isRLSEnabled": false
     }
   },
-  "enums": {
-    "public.status": {
-      "name": "status",
-      "schema": "public",
-      "values": [
-        "open",
-        "accepted",
-        "declined",
-        "deal",
-        "sold"
-      ]
-    }
-  },
+  "enums": {},
   "schemas": {},
   "sequences": {},
   "roles": {},

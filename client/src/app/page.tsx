@@ -10,8 +10,7 @@ export default async function Home() {
 
   return (
     <div>
-      {session?.user?.name}
-
+      {session?.user?.name} {session.user?.id}
       <form
         action={async () => {
           "use server";

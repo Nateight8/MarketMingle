@@ -7,7 +7,6 @@ import {
   integer,
   uniqueIndex,
   boolean,
-  pgEnum,
   uuid,
 } from "drizzle-orm/pg-core";
 import type { AdapterAccount } from "next-auth/adapters";
@@ -125,13 +124,5 @@ export const Authenticator = pgTable(
 Der Käufer klickt den 'Kaufen'-Button, es wird ein Eintrag gemacht und der Verkäufer erhält in seinem Posteingang eine Nachricht dafür...
 Es gibt eine Seite für Konversation, auf button click eröffnet man eine Konversation die hat erstmal diese Felder: Käufer, Verkäufer, Produkt, Status
 */
-
-export const statusEnum = pgEnum("status", [
-  "open",
-  "accepted",
-  "declined",
-  "deal",
-  "sold",
-]);
 
 export type UserType = typeof users.$inferSelect;

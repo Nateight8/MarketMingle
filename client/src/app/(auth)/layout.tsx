@@ -1,14 +1,14 @@
-// import { auth } from "@/auth";
+import { auth } from "@/auth";
 import Image from "next/image";
-// import { redirect } from "next/navigation";
+import { redirect } from "next/navigation";
 import { PropsWithChildren } from "react";
 
 export default async function Layout({ children }: PropsWithChildren) {
-  // const session = await auth();
+  const session = await auth();
 
-  // if (session) {
-  //   return redirect("/");
-  // }
+  if (session) {
+    return redirect("/dashboard");
+  }
 
   return (
     <div className="h-screen py-8 px-4">
