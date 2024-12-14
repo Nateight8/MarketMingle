@@ -3,18 +3,43 @@ import { gql } from "graphql-tag";
 export const userTypeDefs = gql`
   type User {
     id: ID!
-    name: String!
-    age: Int!
+    name: String
     email: String!
+    emailVerified: String
+    image: String
+    location: String
+    address: String
+    phoneVerified: Boolean
+    onboardingCompleted: Boolean
+    shopname: String
+    shoptextfont: String
+    shoptextcolor: String
+    banner: String
+    integrations: [Integration!]!
+    subscriptions: [Subscription!]!
   }
 
   type Query {
-    # Fetch all users
-    users: [User!]!
+    getLoggedInUser: User
+    listUsers: [User]
   }
 
   type Mutation {
-    # Add a new user with name, age, and email
-    addUser(name: String!, age: Int!, email: String!): User!
+    updateUser(
+      id: ID!
+      name: String
+      email: String
+      image: String
+      location: String
+      address: String
+      phoneVerified: Boolean
+      onboardingCompleted: Boolean
+      shopname: String
+      shoptextfont: String
+      shoptextcolor: String
+      banner: String
+    ): User
+
+    deleteUser(id: ID!): Boolean
   }
 `;

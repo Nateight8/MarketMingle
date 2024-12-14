@@ -9,6 +9,7 @@ import typeDefs from "./typeDefs/index.js";
 import { ExpressAuth, getSession } from "@auth/express";
 import { authConfig } from "./config/auth.config.js";
 import { currentSession } from "./middleware/auth.middleware.js";
+import { db } from "./db/index.js";
 
 interface MyContext {
   token?: String;
@@ -44,12 +45,8 @@ app.use(
   express.json(),
   expressMiddleware(server, {
     context: async ({ req, res }) => {
-      const session = res.locals.session;
-
-      console.log("SESSION:", res.locals.session);
-      console.log("Cookies:", req.headers.cookie);
-
-      return { token: req.headers.token };
+      const session = res.locals.session || null; // Ensure fallback
+      return { db, session };
     },
   })
 );

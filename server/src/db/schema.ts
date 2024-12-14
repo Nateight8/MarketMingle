@@ -12,7 +12,8 @@ import {
 export const users = pgTable("user", {
   id: uuid("id")
     .primaryKey()
-    .$defaultFn(() => crypto.randomUUID()),
+    .$defaultFn(() => crypto.randomUUID())
+    .unique(),
   name: text("name"),
   email: text("email").notNull(),
   emailVerified: timestamp("emailVerified", { mode: "date" }),
@@ -38,7 +39,8 @@ export const subscriptionPlanEnum = pgEnum("user_subscription_plan", [
 export const subscriptions = pgTable("subscription", {
   id: uuid("id")
     .primaryKey()
-    .$defaultFn(() => crypto.randomUUID()),
+    .$defaultFn(() => crypto.randomUUID())
+    .unique(),
   userId: uuid("user_id")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
@@ -59,7 +61,8 @@ export const integrationsEnum = pgEnum("integration_types", [
 export const integrations = pgTable("integrations", {
   id: uuid("id")
     .primaryKey()
-    .$defaultFn(() => crypto.randomUUID()),
+    .$defaultFn(() => crypto.randomUUID())
+    .unique(),
   name: integrationsEnum("name").default("INSTAGRAM"),
   createdAt: timestamp("created_at", { mode: "date" }).defaultNow(),
   userId: uuid("user_id")
@@ -74,7 +77,8 @@ export const integrations = pgTable("integrations", {
 export const automations = pgTable("automation", {
   id: uuid("id")
     .primaryKey()
-    .$defaultFn(() => crypto.randomUUID()),
+    .$defaultFn(() => crypto.randomUUID())
+    .unique(),
   name: text("name").default("Untitled"),
   createdAt: timestamp("created_at", { mode: "date" }).defaultNow(),
   active: boolean("active").default(false),
@@ -87,7 +91,8 @@ export const automations = pgTable("automation", {
 export const dms = pgTable("dms", {
   id: uuid("id")
     .primaryKey()
-    .$defaultFn(() => crypto.randomUUID()),
+    .$defaultFn(() => crypto.randomUUID())
+    .unique(),
   automationId: uuid("automation_id")
     .notNull()
     .references(() => automations.id, { onDelete: "cascade" }),
@@ -112,7 +117,8 @@ export const mediaTypeEnum = pgEnum("media_type", [
 export const posts = pgTable("post", {
   id: uuid("id")
     .primaryKey()
-    .$defaultFn(() => crypto.randomUUID()),
+    .$defaultFn(() => crypto.randomUUID())
+    .unique(),
   postid: text("post_id").notNull().unique(),
   caption: text("caption"),
   media: text("media").notNull(),
@@ -129,7 +135,8 @@ export const listenersEnum = pgEnum("listeners", ["SMARTAI", "MESSAGE"]);
 export const listeners = pgTable("listener", {
   id: uuid("id")
     .primaryKey()
-    .$defaultFn(() => crypto.randomUUID()),
+    .$defaultFn(() => crypto.randomUUID())
+    .unique(),
   automationId: uuid("automation_id")
     .notNull()
     .references(() => automations.id, { onDelete: "cascade" }),
@@ -151,7 +158,8 @@ export const triggersEnum = pgEnum("trigger_types", [
 export const triggers = pgTable("trigger", {
   id: uuid("id")
     .primaryKey()
-    .$defaultFn(() => crypto.randomUUID()),
+    .$defaultFn(() => crypto.randomUUID())
+    .unique(),
   type: triggersEnum("type").notNull(),
   automationId: uuid("automation_id")
     .notNull()
@@ -164,7 +172,8 @@ export const keywords = pgTable(
   {
     id: uuid("id")
       .primaryKey()
-      .$defaultFn(() => crypto.randomUUID()),
+      .$defaultFn(() => crypto.randomUUID())
+      .unique(),
     word: text("word").notNull(),
     automationId: uuid("automation_id")
       .notNull()
@@ -186,3 +195,13 @@ export const statusEnum = pgEnum("status", [
   "deal",
   "sold",
 ]);
+
+export type User = typeof users.$inferSelect;
+export type Integrations = typeof integrations.$inferSelect;
+export type Subscriptions = typeof subscriptions.$inferSelect;
+
+export type UserIntegrationSubscription = {
+  users: User;
+  integrations: Integrations | null;
+  subscriptions: Subscriptions | null;
+};
