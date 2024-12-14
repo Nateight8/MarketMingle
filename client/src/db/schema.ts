@@ -20,7 +20,8 @@ export const db = drizzle(pool);
 export const users = pgTable("user", {
   id: uuid("id")
     .primaryKey()
-    .$defaultFn(() => crypto.randomUUID()),
+    .$defaultFn(() => crypto.randomUUID())
+    .unique(),
   name: text("name"),
   email: text("email").notNull(),
   emailVerified: timestamp("emailVerified", { mode: "date" }),
@@ -101,7 +102,8 @@ export const Authenticator = pgTable(
     id: uuid("id")
       .notNull()
       .primaryKey()
-      .$defaultFn(() => genId("ath")),
+      .$defaultFn(() => genId("ath"))
+      .unique(),
     credentialID: text("credentialId").notNull(),
     userId: uuid("userId")
       .notNull()

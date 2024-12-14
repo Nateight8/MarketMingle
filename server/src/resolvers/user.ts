@@ -1,11 +1,5 @@
-import {
-  integrations as dbIntegrations,
-  subscriptions,
-  User,
-  UserIntegrationSubscription,
-  users,
-} from "../db/schema.js";
-import { refreshToken } from "../services/integrations-token-token.js";
+import { integrations, subscriptions, User, users } from "../db/schema.js";
+import { refreshToken } from "../services/tokenRefresh.js";
 import GraphqlContext, { UserInput } from "../types/types.utils.js";
 import { eq } from "drizzle-orm";
 import { GraphQLError } from "graphql";
@@ -15,10 +9,10 @@ const resolvers = {
     // Get logged in user
     getLoggedInUser: async (_: any, __: any, context: GraphqlContext) => {
       console.log("SERVER SAYS HI");
+      const { db, session } = context;
+      const { user: loggedInUser } = session;
 
       try {
-        const { db, session } = context;
-        const { user: loggedInUser } = session;
         if (!loggedInUser?.id) {
           console.error("User not authenticated, session data:", session);
           throw new GraphQLError("Not authenticated", {
@@ -27,55 +21,68 @@ const resolvers = {
             },
           });
         }
-        const userId = loggedInUser.id;
-        const userWithSubscriptions = await db
-          .select({
-            users,
-            subscriptions,
-          })
-          .from(users)
-          .where(eq(users.id, userId))
-          .leftJoin(subscriptions, eq(subscriptions.userId, users.id));
 
-        // Get the logged-in user's integrations
-        const loggedUserIntegrations = await db
+        //will be using this when creating onboarding
+        const sessionId = loggedInUser?.id;
+        const userRecord = await db
           .select()
-          .from(dbIntegrations)
-          .where(eq(dbIntegrations.userId, userWithSubscriptions[0].users.id));
+          .from(users)
+          .where(eq(users.id, sessionId));
 
-        // Ensure you are extracting the user data and integrating it with the integrations
-        const {
-          name,
-          email,
-          image,
-          location,
-          phoneVerified,
-          onboardingCompleted,
-          shopname,
-          shoptextfont,
-          shoptextcolor,
-          banner,
-        } = userWithSubscriptions[0].users;
+        const userSubscriptionRecord = await db
+          .select()
+          .from(subscriptions)
+          .where(eq(subscriptions.userId, sessionId));
 
-        //USER WITH INTEGRATIONS
-        const userWithIntegrations = {
-          name, // Explicitly return the name field
-          email,
-          image,
-          location,
-          phoneVerified,
-          onboardingCompleted,
-          shopname,
-          shoptextfont,
-          shoptextcolor,
-          banner,
-          integrations: loggedUserIntegrations || [],
-          subscriptions: userWithSubscriptions[0].subscriptions || [],
+        //integration checks if old users have integrations running
+        const userIntegrationRecord = await db
+          .select()
+          .from(integrations)
+          .where(eq(integrations.userId, sessionId));
+
+        if (userIntegrationRecord.length > 0) {
+          // <== run this code if user has no integrations
+
+          const token = userIntegrationRecord[0].token; // <==get token
+          const today = new Date();
+          const timeLeft =
+            userIntegrationRecord[0].expiresAt?.getTime()! - today.getTime(); //<== name this
+          const timeInDays = Math.round(timeLeft / (1000 * 3600 * 24));
+
+          if (timeInDays < 5) {
+            const freshToken = await refreshToken(token); // <== pass token
+
+            //update db with recently fetched token
+            const time = new Date();
+
+            const expiresAt = new Date(time.setDate(today.getDate() + 30));
+
+            await db
+              .update(integrations)
+              .set({ token: freshToken.access_token, expiresAt })
+              .where(eq(integrations.userId, sessionId));
+          }
+        }
+
+        let subscription = userSubscriptionRecord;
+
+        if (userSubscriptionRecord.length === 0) {
+          subscription = await db
+            .insert(subscriptions)
+            .values({
+              userId: sessionId,
+              plan: "FREE",
+            })
+            .returning();
+        }
+
+        const user = {
+          ...userRecord[0],
+          subscriptions: subscription,
+          integrations: userIntegrationRecord || [],
         };
 
-        console.log(userWithIntegrations); //<==returned with name
-
-        return userWithIntegrations;
+        return { status: 200, user };
       } catch (error) {
         console.error("Error fetching user:", error);
         // Throw an error with appropriate details

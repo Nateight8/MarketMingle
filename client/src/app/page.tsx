@@ -1,24 +1,17 @@
-import { auth, signOut } from "@/auth";
+"use client";
+
+import userOperations, { GetLoggedInUser } from "@/graphql/operations/user";
+import { useQuery } from "@apollo/client";
 import { redirect } from "next/navigation";
 
-export default async function Home() {
-  const session = await auth();
-
-  if (!session) {
-    return redirect("/sign-in");
-  }
-
-  return (
-    <div>
-      {session?.user?.name} {session.user?.id}
-      <form
-        action={async () => {
-          "use server";
-          await signOut();
-        }}
-      >
-        <button type="submit">Sign Out</button>
-      </form>
-    </div>
+export default function Home() {
+  const { data } = useQuery<GetLoggedInUser>(
+    userOperations.Querries.createPost
   );
+
+  //TODA: WE WILL THINK OF HOW TO USE STATES
+
+  if (data?.getLoggedInUser.status === 200) {
+    redirect("/dashboard");
+  }
 }

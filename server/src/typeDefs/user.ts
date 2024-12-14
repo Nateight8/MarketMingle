@@ -19,8 +19,13 @@ export const userTypeDefs = gql`
     subscriptions: [Subscription!]!
   }
 
+  type GetLoggedInUserReturn {
+    status: Int
+    user: User
+  }
+
   type Query {
-    getLoggedInUser: User
+    getLoggedInUser: GetLoggedInUserReturn
     listUsers: [User]
   }
 
