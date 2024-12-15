@@ -2,18 +2,15 @@ import { cn } from "@/lib/utils";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { IconBrain, IconMessageChatbot } from "@tabler/icons-react";
 import Link from "next/link";
-// import { Icon, IconLink, IconProps } from "@tabler/icons-react";
-// import { ForwardRefExoticComponent, RefAttributes } from "react";
+import { AutomationProps } from "@/graphql/operations/automations";
 
-// interface CardProps {
-//   platform: string;
-//   // Icon: ForwardRefExoticComponent<IconProps & RefAttributes<Icon>>;
-//   description: string;
-// }
-
-export function AutomationCard() {
+export function AutomationCard({
+  active,
+  createdAt,
+  name,
+  id,
+}: AutomationProps) {
   const isAIEnabled = false;
-  const id = "1234";
 
   return (
     <Link href={`/automations/${id}`} className="">

@@ -1,0 +1,51 @@
+import { gql } from "graphql-tag";
+
+const automationTypeDefs = gql`
+  """
+  Represents an automation created by a user.
+  """
+  type Automation {
+    id: ID!                   # Unique identifier for the automation
+    name: String!             # Name of the automation
+    createdAt: String!        # Timestamp when the automation was created
+    active: Boolean!          # Whether the automation is active
+    userId: ID!               # ID of the user who owns this automation
+    user: User                # The user object associated with this automation
+  }
+
+  """
+  Queries for fetching automations.
+  """
+   type Query {
+    """
+    Fetch a single automation by its ID.
+    """
+    # getAutomation(id: ID!): Automation
+
+
+    listAutomations: [Automation!]!
+  }
+
+  """
+  Mutations for managing automations.
+  """
+   type Mutation {
+    """
+    Create a new automation.
+    """
+    # createAutomation(name: String!, active: Boolean!, userId: ID!): Automation!
+
+    """
+    Update an existing automation.
+    """
+    # updateAutomation(id: ID!, name: String, active: Boolean): Automation!
+
+    """
+    Delete an automation by its ID.
+    Returns a boolean indicating success.
+    """
+    # deleteAutomation(id: ID!): Boolean!
+  }
+`;
+
+export default automationTypeDefs;

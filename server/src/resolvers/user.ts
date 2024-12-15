@@ -1,10 +1,10 @@
 import { integrations, subscriptions, User, users } from "../db/schema.js";
-import { refreshToken } from "../services/tokenRefresh.js";
+import { refreshToken } from "../utils/tokenRefresh.js";
 import GraphqlContext, { UserInput } from "../types/types.utils.js";
 import { eq } from "drizzle-orm";
 import { GraphQLError } from "graphql";
 
-const resolvers = {
+const userResolvers = {
   Query: {
     // Get logged in user
     getLoggedInUser: async (_: any, __: any, context: GraphqlContext) => {
@@ -12,16 +12,16 @@ const resolvers = {
       const { db, session } = context;
       const { user: loggedInUser } = session;
 
-      try {
-        if (!loggedInUser?.id) {
-          console.error("User not authenticated, session data:", session);
-          throw new GraphQLError("Not authenticated", {
-            extensions: {
-              code: "UNAUTHORIZED",
-            },
-          });
-        }
+      if (!loggedInUser?.id) {
+        console.error("User not authenticated, session data:", session);
+        throw new GraphQLError("Not authenticated", {
+          extensions: {
+            code: "UNAUTHORIZED",
+          },
+        });
+      }
 
+      try {
         //will be using this when creating onboarding
         const sessionId = loggedInUser?.id;
         const userRecord = await db
@@ -127,4 +127,4 @@ const resolvers = {
   },
 };
 
-export default resolvers;
+export default userResolvers;

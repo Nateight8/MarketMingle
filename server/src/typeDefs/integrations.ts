@@ -16,6 +16,7 @@ export const integrationsTypeDefs = gql`
     token: String!
     expiresAt: String
     instagramId: String
+    listener: Listener
   }
 
   # Queries related to integrations
