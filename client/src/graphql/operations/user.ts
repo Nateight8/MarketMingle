@@ -7,6 +7,7 @@ const userOperations = {
         getLoggedInUser {
           status
           user {
+            id
             name
             email
             integrations {
@@ -32,6 +33,7 @@ interface GetLoggedInUser {
   getLoggedInUser: {
     status: number;
     user: {
+      id: string;
       name: string;
       email: string;
       integrations: Integrations[];

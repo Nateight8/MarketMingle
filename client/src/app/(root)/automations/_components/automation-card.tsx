@@ -4,12 +4,12 @@ import { IconBrain, IconMessageChatbot } from "@tabler/icons-react";
 import Link from "next/link";
 import { AutomationProps } from "@/graphql/operations/automations";
 
-export function AutomationCard({
-  active,
-  createdAt,
-  name,
-  id,
-}: AutomationProps) {
+interface Props {
+  automation: AutomationProps;
+}
+
+export function AutomationCard({ automation }: Props) {
+  const { active, createdAt, id, name } = automation;
   const isAIEnabled = false;
 
   return (
@@ -19,7 +19,7 @@ export function AutomationCard({
           <CardTitle className="flex justify-between items-center ">
             <div className="flex items-center gap-3">
               {isAIEnabled ? <IconMessageChatbot /> : <IconBrain />}
-              <span> DM Reply Automation</span>
+              <span> {name}</span>
             </div>
 
             {/* <Button size="icon" variant="outline">

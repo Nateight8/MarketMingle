@@ -36,18 +36,18 @@ const automationTypeDefs = gql`
     keywords: [Keyword]
   }
 
-  extend type Query {
-    # getAutomation(id: ID!): Automation
+  type Query {
+    getAutomation(id: ID!): Automation
     listAutomations: [Automation]
   }
 
-  # extend type Mutation {
-  #   createAutomation(name: String, active: Boolean, userId: ID!): Automation
+  type Mutation {
+    createAutomation(name: String, active: Boolean, userId: ID!): Automation
 
-  #   updateAutomation(id: ID!, name: String, active: Boolean): Automation
+    # updateAutomation(id: ID!, name: String, active: Boolean): Automation
 
-  #   deleteAutomation(id: ID!): Boolean
-  # }
+    # deleteAutomation(id: ID!): Boolean
+  }
 `;
 
 export default automationTypeDefs;
