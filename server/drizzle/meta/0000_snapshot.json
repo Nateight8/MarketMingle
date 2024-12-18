@@ -1,5 +1,5 @@
 {
-  "id": "c1ed7b95-50c1-4163-87fa-6b9de5091db0",
+  "id": "2bfda6c0-9e03-475a-98af-294d8f1a587c",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -326,15 +326,7 @@
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "keyword_id_unique": {
-          "name": "keyword_id_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "id"
-          ]
-        }
-      },
+      "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
@@ -390,7 +382,29 @@
           "default": 0
         }
       },
-      "indexes": {},
+      "indexes": {
+        "unique_listener": {
+          "name": "unique_listener",
+          "columns": [
+            {
+              "expression": "automation_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "listener",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
       "foreignKeys": {
         "listener_automation_id_automation_id_fk": {
           "name": "listener_automation_id_automation_id_fk",
@@ -407,15 +421,7 @@
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "listener_id_unique": {
-          "name": "listener_id_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "id"
-          ]
-        }
-      },
+      "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
@@ -606,7 +612,29 @@
           "notNull": true
         }
       },
-      "indexes": {},
+      "indexes": {
+        "automation_id_unique": {
+          "name": "automation_id_unique",
+          "columns": [
+            {
+              "expression": "automation_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "type",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
       "foreignKeys": {
         "trigger_automation_id_automation_id_fk": {
           "name": "trigger_automation_id_automation_id_fk",
@@ -623,15 +651,7 @@
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "trigger_id_unique": {
-          "name": "trigger_id_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "id"
-          ]
-        }
-      },
+      "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
@@ -789,9 +809,8 @@
       "name": "trigger_types",
       "schema": "public",
       "values": [
-        "EVENT",
-        "ACTION",
-        "CONDITION"
+        "DM",
+        "COMMENT"
       ]
     }
   },

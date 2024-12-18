@@ -1,5 +1,3 @@
-// integrationsTypeDefs.ts
-
 import { gql } from "graphql-tag";
 
 export const integrationsTypeDefs = gql`

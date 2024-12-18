@@ -1,10 +1,10 @@
 import { gql } from "graphql-tag";
 
 const automationTypeDefs = gql`
-  enum ListenerEnum {
-    MESSAGE
-    COMMENT
+  enum TriggerEnum {
     DM
+    COMMENT
+
     # Add other listener types if necessary
   }
 

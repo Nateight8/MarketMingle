@@ -1,23 +1,26 @@
 CREATE TYPE "public"."integration_types" AS ENUM('INSTAGRAM', 'TWITTER', 'FACEBOOK');--> statement-breakpoint
 CREATE TYPE "public"."listeners" AS ENUM('SMARTAI', 'MESSAGE');--> statement-breakpoint
 CREATE TYPE "public"."media_type" AS ENUM('IMAGE', 'CAROUSEL_ALBUM', 'TEXT');--> statement-breakpoint
-CREATE TYPE "public"."subscription_plan" AS ENUM('FREE', 'PREMIUM', 'ENTERPRISE');--> statement-breakpoint
-CREATE TYPE "public"."trigger_types" AS ENUM('EVENT', 'ACTION', 'CONDITION');--> statement-breakpoint
+CREATE TYPE "public"."status" AS ENUM('open', 'accepted', 'declined', 'deal', 'sold');--> statement-breakpoint
+CREATE TYPE "public"."user_subscription_plan" AS ENUM('FREE', 'PREMIUM', 'ENTERPRISE');--> statement-breakpoint
+CREATE TYPE "public"."trigger_types" AS ENUM('DM', 'COMMENT');--> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "automation" (
 	"id" uuid PRIMARY KEY NOT NULL,
 	"name" text DEFAULT 'Untitled',
 	"created_at" timestamp DEFAULT now(),
 	"active" boolean DEFAULT false,
-	"user_id" uuid
+	"user_id" uuid NOT NULL,
+	CONSTRAINT "automation_id_unique" UNIQUE("id")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "dms" (
 	"id" uuid PRIMARY KEY NOT NULL,
-	"automation_id" uuid,
+	"automation_id" uuid NOT NULL,
 	"created_at" timestamp DEFAULT now(),
 	"sender_id" uuid NOT NULL,
 	"receiver" uuid NOT NULL,
-	"message" text
+	"message" text,
+	CONSTRAINT "dms_id_unique" UNIQUE("id")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "integrations" (
@@ -28,6 +31,7 @@ CREATE TABLE IF NOT EXISTS "integrations" (
 	"token" text NOT NULL,
 	"expires_at" timestamp,
 	"instagram_id" text,
+	CONSTRAINT "integrations_id_unique" UNIQUE("id"),
 	CONSTRAINT "integrations_token_unique" UNIQUE("token"),
 	CONSTRAINT "integrations_instagram_id_unique" UNIQUE("instagram_id")
 );
@@ -40,7 +44,7 @@ CREATE TABLE IF NOT EXISTS "keyword" (
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "listener" (
 	"id" uuid PRIMARY KEY NOT NULL,
-	"automation_id" uuid,
+	"automation_id" uuid NOT NULL,
 	"listener" "listeners" DEFAULT 'MESSAGE',
 	"prompt" text NOT NULL,
 	"comment_reply" text,
@@ -54,42 +58,43 @@ CREATE TABLE IF NOT EXISTS "post" (
 	"caption" text,
 	"media" text NOT NULL,
 	"media_type" "media_type" DEFAULT 'IMAGE',
-	"automation_id" uuid,
+	"automation_id" uuid NOT NULL,
+	CONSTRAINT "post_id_unique" UNIQUE("id"),
 	CONSTRAINT "post_post_id_unique" UNIQUE("post_id")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "subscription" (
 	"id" uuid PRIMARY KEY NOT NULL,
-	"user_id" uuid,
+	"user_id" uuid NOT NULL,
 	"created_at" timestamp DEFAULT now(),
 	"updated_at" timestamp DEFAULT now(),
-	"plan" "subscription_plan" DEFAULT 'FREE',
+	"plan" "user_subscription_plan" DEFAULT 'FREE',
 	"customer_id" text,
+	CONSTRAINT "subscription_id_unique" UNIQUE("id"),
 	CONSTRAINT "subscription_customer_id_unique" UNIQUE("customer_id")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "trigger" (
 	"id" uuid PRIMARY KEY NOT NULL,
 	"type" "trigger_types" NOT NULL,
-	"automation_id" uuid
+	"automation_id" uuid NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "user" (
 	"id" uuid PRIMARY KEY NOT NULL,
-	"name" text DEFAULT 'Anonymous' NOT NULL,
-	"age" integer NOT NULL,
+	"name" text,
 	"email" text NOT NULL,
-	"email_verified" timestamp,
+	"emailVerified" timestamp,
 	"image" text,
 	"location" text,
-	"address" text,
-	"phone_verified" boolean DEFAULT false,
-	"onboarding_completed" boolean DEFAULT false,
+	"adress" text,
+	"phoneVerified" boolean DEFAULT false,
+	"onboardingCompleted" boolean DEFAULT false,
 	"shopname" text,
 	"shoptextfont" text,
 	"shoptextcolor" text,
 	"banner" text,
-	CONSTRAINT "user_email_unique" UNIQUE("email")
+	CONSTRAINT "user_id_unique" UNIQUE("id")
 );
 --> statement-breakpoint
 DO $$ BEGIN
@@ -152,4 +157,6 @@ EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
-CREATE UNIQUE INDEX IF NOT EXISTS "automation_keyword_unique" ON "keyword" USING btree ("automation_id","word");
+CREATE UNIQUE INDEX IF NOT EXISTS "automation_keyword_unique" ON "keyword" USING btree ("automation_id","word");--> statement-breakpoint
+CREATE UNIQUE INDEX IF NOT EXISTS "unique_listener" ON "listener" USING btree ("automation_id","listener");--> statement-breakpoint
+CREATE UNIQUE INDEX IF NOT EXISTS "automation_id_unique" ON "trigger" USING btree ("automation_id","type");

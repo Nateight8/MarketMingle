@@ -132,39 +132,66 @@ export const posts = pgTable("post", {
 export const listenersEnum = pgEnum("listeners", ["SMARTAI", "MESSAGE"]);
 
 // Listeners table
-export const listeners = pgTable("listener", {
-  id: uuid("id")
-    .primaryKey()
-    .$defaultFn(() => crypto.randomUUID())
-    .unique(),
-  automationId: uuid("automation_id")
-    .notNull()
-    .references(() => automations.id, { onDelete: "cascade" }),
-  listener: listenersEnum("listener").default("MESSAGE"),
-  prompt: text("prompt").notNull(),
-  commentReply: text("comment_reply"),
-  dmCount: integer("dm_count").default(0),
-  commentCount: integer("comment_count").default(0),
-});
+export const listeners = pgTable(
+  "listener",
+  {
+    id: uuid("id")
+      .primaryKey()
+      .$defaultFn(() => crypto.randomUUID()),
+    automationId: uuid("automation_id")
+      .notNull()
+      .references(() => automations.id, { onDelete: "cascade" }),
+    listener: listenersEnum("listener").default("MESSAGE"),
+    prompt: text("prompt").notNull(),
+    commentReply: text("comment_reply"),
+    dmCount: integer("dm_count").default(0),
+    commentCount: integer("comment_count").default(0),
+  },
+  (table) => ({
+    uniqueListener: uniqueIndex("unique_listener").on(
+      table.automationId,
+      table.listener
+    ),
+  })
+);
 
 // Triggers Enum
 export const triggersEnum = pgEnum("trigger_types", [
-  "EVENT",
-  "ACTION",
-  "CONDITION",
+  "DM",
+  "COMMENT",
+  // LIKE
+  // FOLLOW
 ]);
-
 // Triggers table
-export const triggers = pgTable("trigger", {
-  id: uuid("id")
-    .primaryKey()
-    .$defaultFn(() => crypto.randomUUID())
-    .unique(),
-  type: triggersEnum("type").notNull(),
-  automationId: uuid("automation_id")
-    .notNull()
-    .references(() => automations.id, { onDelete: "cascade" }),
-});
+// export const triggers = pgTable("trigger", {
+//   id: uuid("id")
+//     .primaryKey()
+//     .$defaultFn(() => crypto.randomUUID())
+//     .unique(),
+//   type: triggersEnum("type").notNull(),
+//   automationId: uuid("automation_id")
+//     .notNull()
+//     .references(() => automations.id, { onDelete: "cascade" }),
+// });
+
+export const triggers = pgTable(
+  "trigger",
+  {
+    id: uuid("id")
+      .primaryKey()
+      .$defaultFn(() => crypto.randomUUID()),
+    type: triggersEnum("type").notNull(),
+    automationId: uuid("automation_id")
+      .notNull()
+      .references(() => automations.id, { onDelete: "cascade" }),
+  },
+  (table) => ({
+    automationIdUnique: uniqueIndex("automation_id_unique").on(
+      table.automationId,
+      table.type
+    ),
+  })
+);
 
 // Keywords table
 export const keywords = pgTable(
@@ -172,8 +199,7 @@ export const keywords = pgTable(
   {
     id: uuid("id")
       .primaryKey()
-      .$defaultFn(() => crypto.randomUUID())
-      .unique(),
+      .$defaultFn(() => crypto.randomUUID()),
     word: text("word").notNull(),
     automationId: uuid("automation_id")
       .notNull()
