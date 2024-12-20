@@ -7,6 +7,5 @@ export default async function Page() {
 
   if (!session || !session.user?.id) redirect("/sign-in");
 
-  const userId = session?.user?.id;
-  return <AutomationClient userId={userId} />;
+  return <AutomationClient />;
 }

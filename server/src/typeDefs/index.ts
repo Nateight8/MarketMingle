@@ -7,6 +7,8 @@ import { subscriptionsTypeDefs } from "./subscription.js";
 import { userTypeDefs } from "./user.js";
 import automationSetup from "./automation-setup.js";
 import trigger from "./trigger.js";
+import listener from "./listener.js";
+import { keywords } from "./keywords.js";
 
 const typeDefs = [
   postTypeDefs,
@@ -14,8 +16,10 @@ const typeDefs = [
   integrationsTypeDefs,
   subscriptionsTypeDefs,
   automationTypeDefs,
+  listener,
   automationSetup,
   trigger,
+  keywords,
 ];
 
 export default typeDefs;

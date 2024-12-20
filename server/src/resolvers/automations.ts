@@ -31,27 +31,27 @@ const automationResolvers = {
       const userId = user.id;
 
       try {
-        const userAutomation = await db
+        const userAutomations = await db
           .select()
           .from(automations)
-          .where(eq(automations.userId, userId))
-          .leftJoin(keywords, eq(automations.id, keywords.automationId)) // <==join on automationId,
-          .leftJoin(listeners, eq(automations.id, listeners.automationId)); // <== join on automationId,
+          .where(eq(automations.userId, userId));
 
-        console.log(userAutomation);
+        console.log(userAutomations);
 
-        // Flatten the automation results
-        const flattenedAutomations = userAutomation.map((row) => ({
-          id: row.automation.id,
-          name: row.automation.name,
-          createdAt: row.automation.createdAt,
-          active: row.automation.active,
-          userId: row.automation.userId,
-          keywords: row.keyword,
-          listeners: row.listener,
+        console.log("SERVER SAYS HERE US AUTOMATION:", userAutomations);
+
+        // Map over the results to format the data
+        const formattedAutomations = userAutomations.map((automation) => ({
+          id: automation.id,
+          // name: automation.name,
+          // createdAt: automation.createdAt,
+          // active: automation.active,
+          // userId: automation.userId,
         }));
 
-        return flattenedAutomations;
+        return formattedAutomations;
+
+        return;
       } catch (error) {
         console.error("Error fetching user:", error);
         // Throw an error with appropriate details
@@ -90,10 +90,12 @@ const automationResolvers = {
         const automation = await db
           .select()
           .from(automations)
-          .where(eq(automations.id, id))
-          .leftJoin(keywords, eq(automations.id, keywords.automationId))
-          .leftJoin(listeners, eq(automations.id, listeners.automationId))
-          .leftJoin(triggers, eq(automations.id, triggers.automationId));
+          .where(eq(automations.id, id));
+
+        const triggerRecord = await db
+          .select()
+          .from(triggers)
+          .where(eq(triggers.automationId, id));
 
         const userSubscriptionRecord = await db
           .select({ plan: subscriptions.plan }) // Only fetch subscription plan
@@ -114,12 +116,7 @@ const automationResolvers = {
           .where(eq(users.id, userId));
 
         const automationRecord = {
-          ...automation[0],
-          user: {
-            ...userRecord[0],
-            integrations: userIntegrationRecord,
-            subscriptions: userSubscriptionRecord,
-          },
+          trigger: triggerRecord[0],
         };
 
         console.log("AUTOMATION RECORD: ", automationRecord);
@@ -177,7 +174,7 @@ const automationResolvers = {
 
         return {
           id: newAutomation[0].id,
-          userId: newAutomation[0].userId,
+          // userId: newAutomation[0].userId,
         };
       } catch (error) {
         console.error("Error fetching user:", error);

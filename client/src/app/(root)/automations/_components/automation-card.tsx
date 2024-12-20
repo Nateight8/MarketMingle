@@ -9,7 +9,7 @@ interface Props {
 }
 
 export function AutomationCard({ automation }: Props) {
-  const { active, createdAt, id, name } = automation;
+  const { id, name } = automation;
   const isAIEnabled = false;
 
   return (

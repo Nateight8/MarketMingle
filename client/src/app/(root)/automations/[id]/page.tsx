@@ -1,7 +1,4 @@
-"use client";
-
-import automationOperations from "@/graphql/operations/automations";
-import { useQuery } from "@apollo/client";
+import AutomationClient from "./_components/client";
 
 interface PageProp {
   params: {
@@ -9,10 +6,12 @@ interface PageProp {
   };
 }
 
-export default function Page({ params }: PageProp) {
-  const { data } = useQuery(automationOperations.Queries.GetAutomation, {
-    variables: { getAutomationId: params.id },
-  });
+export default async function Page({ params }: PageProp) {
+  const id = await params.id;
 
-  return <div className="p-4 md:py-10">{params.id}</div>;
+  return (
+    <div className="p-4 md:py-10">
+      <AutomationClient id={id} />
+    </div>
+  );
 }

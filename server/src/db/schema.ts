@@ -162,17 +162,6 @@ export const triggersEnum = pgEnum("trigger_types", [
   // LIKE
   // FOLLOW
 ]);
-// Triggers table
-// export const triggers = pgTable("trigger", {
-//   id: uuid("id")
-//     .primaryKey()
-//     .$defaultFn(() => crypto.randomUUID())
-//     .unique(),
-//   type: triggersEnum("type").notNull(),
-//   automationId: uuid("automation_id")
-//     .notNull()
-//     .references(() => automations.id, { onDelete: "cascade" }),
-// });
 
 export const triggers = pgTable(
   "trigger",

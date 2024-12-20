@@ -6,13 +6,16 @@ import automationOperations, {
 } from "@/graphql/operations/automations";
 import { AutomationCard } from "./automation-card";
 import AutomationButton from "@/components/automation-button";
+import { IconPlus } from "@tabler/icons-react";
 
-export default function AutomationClient({ userId }: { userId: string }) {
+export default function AutomationClient() {
   const { data } = useQuery<ListUserAutomations>(
     automationOperations.Queries.ListUserAutomations
   );
 
   if (data?.listAutomations.length === 0) return <NoAutomationsFound />;
+
+  console.log("hello DATA:", data);
 
   return (
     <div className="p-4 md:py-10">
@@ -20,6 +23,11 @@ export default function AutomationClient({ userId }: { userId: string }) {
         {data?.listAutomations.map((automation) => (
           <AutomationCard key={automation.id} automation={automation} />
         ))}
+
+        <AutomationButton>
+          {" "}
+          <IconPlus />
+        </AutomationButton>
       </div>
     </div>
   );
