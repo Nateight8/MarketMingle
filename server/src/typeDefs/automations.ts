@@ -9,7 +9,7 @@ const automationTypeDefs = gql`
     # userId: ID!
     # user: User
     # listeners: Listener
-    # keywords: Keyword
+    keywords: [Keyword]
     trigger: Trigger
   }
 

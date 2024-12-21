@@ -1,7 +1,6 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-
 import { Label } from "@/components/ui/label";
 import { IconDeviceFloppy } from "@tabler/icons-react";
 import { Tag, TagInput } from "emblor";
@@ -9,23 +8,32 @@ import { useState, useEffect } from "react";
 import { ControllerRenderProps } from "react-hook-form";
 
 interface KeywordProps extends ControllerRenderProps {
+  loading: boolean;
   // Add any additional props here if needed
-  handleNextStep: () => void;
 }
 
-export default function Keyword({
-  onChange,
-  value,
-  handleNextStep,
-}: KeywordProps) {
-  const [exampleTags, setExampleTags] = useState<Tag[]>(
-    (value as string[])?.map((text) => ({ id: text, text })) || []
+export default function Keyword({ onChange, value }: KeywordProps) {
+  const [exampleTags, setExampleTags] = useState<Tag[]>(() =>
+    Array.isArray(value)
+      ? value.map(({ id, word }) => ({ id, text: word }))
+      : []
   );
+
   const [activeTagIndex, setActiveTagIndex] = useState<number | null>(null);
 
   useEffect(() => {
-    onChange(exampleTags.map((tag) => tag.text));
-  }, [exampleTags, onChange]);
+    // Compare the current `exampleTags` with the new `value` to prevent redundant updates
+    const currentTags = exampleTags.map((tag) => tag.text);
+    const newTags = Array.isArray(value) ? value.map(({ word }) => word) : [];
+
+    if (JSON.stringify(currentTags) !== JSON.stringify(newTags)) {
+      setExampleTags(
+        Array.isArray(value)
+          ? value.map(({ id, word }) => ({ id, text: word }))
+          : []
+      );
+    }
+  }, [value, onChange]);
 
   return (
     <div
@@ -43,7 +51,12 @@ export default function Keyword({
           id="input-57"
           tags={exampleTags}
           setTags={(newTags) => {
-            setExampleTags(newTags);
+            const updatedTags = Array.isArray(newTags)
+              ? newTags.map((tag) => ({ id: tag.id || "", text: tag.text }))
+              : [];
+
+            setExampleTags(updatedTags);
+            onChange(updatedTags.map(({ id, text }) => ({ id, word: text }))); // Update form state
           }}
           placeholder="Add a keyword or two..."
           styleClasses={{
@@ -62,8 +75,8 @@ export default function Keyword({
         />
       </div>
       <div className="mt-4">
-        <Button onClick={handleNextStep} className="w-full" type="button">
-          <IconDeviceFloppy /> Save progress
+        <Button className="w-full" type="submit">
+          <IconDeviceFloppy /> save progress
         </Button>
       </div>
     </div>

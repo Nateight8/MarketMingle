@@ -3,12 +3,10 @@ import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 
-import { Button } from "@/components/ui/button";
-
 import { TriggerField } from "../fields/trigger-field";
 import { useMutation } from "@apollo/client";
-import triggerOperations, { Trigger } from "@/graphql/operations/trigger";
-import { useEffect, useState } from "react";
+import triggerOperations from "@/graphql/operations/trigger";
+import { useEffect } from "react";
 
 const FormSchema = z.object({
   trigger: z.enum(["DM", "COMMENT"]),
@@ -24,7 +22,7 @@ export function TriggerForm({
   data,
 }: {
   automationId: string;
-  data: Trigger;
+  data: "DM" | "COMMENT" | undefined;
 }) {
   const [createTrigger] = useMutation(
     triggerOperations.Mutations.createTrigger
@@ -32,7 +30,7 @@ export function TriggerForm({
 
   // console.log(data);
 
-  const { control, handleSubmit, reset, setValue } = useForm<FormValues>({
+  const { control, handleSubmit, setValue } = useForm<FormValues>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
       trigger: undefined,
@@ -40,12 +38,10 @@ export function TriggerForm({
   });
 
   useEffect(() => {
-    if (data.type) {
-      setValue("trigger", data.type, { shouldValidate: true });
-    } else {
-      setValue("trigger", undefined, { shouldValidate: true });
+    if (data) {
+      setValue("trigger", data, { shouldValidate: true });
     }
-  }, [data.type, setValue]);
+  }, [data, setValue]);
 
   const handleChange = async (type: "DM" | "COMMENT") => {
     try {
@@ -60,7 +56,7 @@ export function TriggerForm({
   };
 
   return (
-    <form onSubmit={handleSubmit(() => {})} className="space-y-8">
+    <form onSubmit={handleSubmit(() => {})}>
       <Controller
         name="trigger"
         control={control}
@@ -75,7 +71,6 @@ export function TriggerForm({
           />
         )}
       />
-      <Button type="submit">Submit</Button>
     </form>
   );
 }

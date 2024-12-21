@@ -4,57 +4,66 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 
 import Keyword from "../fields/keywords";
+import { useMutation } from "@apollo/client";
+import keywordsOperations, { keyword } from "@/graphql/operations/keywords";
 
 const FormSchema = z.object({
-  username: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
-  }),
+  keywords: z
+    .array(
+      z.object({
+        id: z.string(), // The `id` is a string as per the DB structure
+        word: z
+          .string()
+          .min(1, "Keyword cannot be empty")
+          .regex(/^[a-zA-Z]+$/, "Keyword must be a valid word"), // `word` is also a string
+      })
+    )
+    .min(1, "At least one keyword is required"), // Ensure at least one keyword
 });
 
-export function InputForm() {
+export function KeywordsForm({
+  automationId,
+  defaultKeywords = [],
+}: {
+  automationId: string;
+  defaultKeywords?: keyword[];
+}) {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      username: "",
+      keywords: defaultKeywords,
     },
   });
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
-    console.log(data);
+  const [createKeywords, { loading }] = useMutation(
+    keywordsOperations.Mutations.createKeywords
+  );
+
+  async function onSubmit(data: z.infer<typeof FormSchema>) {
+    const keywords = data.keywords.map(({ word }) => word);
+
+    console.log("data", data);
+
+    await createKeywords({ variables: { automationId, keywords } });
   }
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-6">
+      <form onSubmit={form.handleSubmit(onSubmit)}>
         <FormField
           control={form.control}
-          name="username"
+          name="keywords"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Username</FormLabel>
               <FormControl>
-                <Keyword handleNextStep={() => {}} {...field} />
+                <Keyword {...field} loading={loading} />
               </FormControl>
-              <FormDescription>
-                This is your public display name.
-              </FormDescription>
-              <FormMessage />
             </FormItem>
           )}
         />
-        <Button type="submit">Submit</Button>
       </form>
     </Form>
   );

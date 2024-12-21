@@ -23,11 +23,5 @@ interface Trigger {
   type: TriggerEnum;
 }
 
-interface GetAutomation {
-  getAutomation: {
-    trigger: Trigger;
-  };
-}
-
 export default triggerOperations;
-export type { GetAutomation, Trigger };
+export type { Trigger };

@@ -3,7 +3,7 @@
 import { Listener } from "../automations/[id]/_components/fields/listener";
 import Message from "../automations/[id]/_components/fields/message";
 import Prompt from "../automations/[id]/_components/fields/prompt";
-import { Trigger } from "../automations/[id]/_components/forms/trigger";
+import { TriggerField } from "../automations/[id]/_components/fields/trigger-field";
 
 export default function Page() {
   return (
@@ -13,7 +13,7 @@ export default function Page() {
           STEP1: trigger mutation for type, choose between DM or COMMENT
           (completes trigger)
         </p>
-        <Trigger />
+        <TriggerField />
       </div>
       <div className="">
         <p className="pb-4">

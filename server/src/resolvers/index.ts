@@ -5,6 +5,7 @@ import automationResolvers from "./automations.js";
 import createAutomationSetup from "./automation-setup.js";
 import listenerResolvers from "./listener.js";
 import triggerResolvers from "./trigger.js";
+import keywordResolvers from "./keyword.js";
 
 // import listenersResolvers from "./listeners.js";
 
@@ -15,7 +16,8 @@ const resolvers = merge(
   automationResolvers,
   createAutomationSetup,
   listenerResolvers,
-  triggerResolvers
+  triggerResolvers,
+  keywordResolvers
 );
 
 export default resolvers;

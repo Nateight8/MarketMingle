@@ -2,14 +2,18 @@
 
 import { useQuery } from "@apollo/client";
 import { TriggerForm } from "./forms/trigger";
-import automationOperations from "@/graphql/operations/automations";
-import { GetAutomation } from "@/graphql/operations/trigger";
+import automationOperations, {
+  GetAutomation,
+} from "@/graphql/operations/automations";
+import { KeywordsForm } from "./forms/keywords";
 
 interface PageProp {
   id: string;
 }
 
 export default function AutomationClient({ id: getAutomationId }: PageProp) {
+  //steps
+
   const { data, loading, error } = useQuery<GetAutomation>(
     automationOperations.Queries.GetAutomation,
     {
@@ -26,14 +30,25 @@ export default function AutomationClient({ id: getAutomationId }: PageProp) {
     return <div>Error loading automation data</div>;
   }
 
-  console.log("TRIGGER FROM CLIENT", data?.getAutomation.trigger);
+  const triggerData =
+    data?.getAutomation.trigger === null
+      ? undefined
+      : data?.getAutomation.trigger.type;
 
+  const defaultKeywords =
+    data?.getAutomation.keywords === null ? [] : data?.getAutomation.keywords;
+
+  defaultKeywords?.map(({}) => {});
   return (
-    <div className="">
-      <TriggerForm
-        data={data.getAutomation.trigger}
-        automationId={getAutomationId}
-      />
+    <div className="space-y-8">
+      <TriggerForm data={triggerData} automationId={getAutomationId} />
+
+      {data?.getAutomation.trigger !== null && (
+        <KeywordsForm
+          defaultKeywords={defaultKeywords}
+          automationId={getAutomationId}
+        />
+      )}
     </div>
   );
 }
