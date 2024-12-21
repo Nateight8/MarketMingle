@@ -6,7 +6,7 @@ export const listener = gql`
     automationId: ID!
     automation: Automation!
     listener: ListenerType!
-    prompt: String!
+    prompt: String
     commentReply: String
     dmCount: Int!
     commentCount: Int!
@@ -26,7 +26,7 @@ export const listener = gql`
     createListener(
       automationId: ID!
       listener: ListenerType!
-      prompt: String!
+      prompt: String
       commentReply: String
     ): CreateListenerResponse
   }

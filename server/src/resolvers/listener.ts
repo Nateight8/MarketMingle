@@ -1,30 +1,36 @@
 import { eq } from "drizzle-orm";
+import { GraphQLError } from "graphql";
+import { automations, listeners, listenersEnum } from "../db/schema.js";
 import GraphqlContext from "../types/types.utils.js";
-import { listeners, automations } from "../db/schema.js"; // Make sure to import the tables
 
-interface CreateListenerInput {
+enum ListenerEnum {
+  SMARTAI = "SMARTAI",
+  MESSAGE = "MESSAGE",
+}
+
+interface InputArgs {
   automationId: string;
-  listener: "SMARTAI" | "MESSAGE"; // Enum matches ListenerType
-  prompt: string;
-  commentReply: string | null;
+  listener: ListenerEnum;
+  prompt?: string;
+  commentReply?: string;
 }
 
-interface CreateListenerResponse {
-  success: boolean;
-  message: string;
-}
-
-const listenerResolvers = {
+export const listenerResolvers = {
   Mutation: {
-    createListener: async (
-      _parent: any,
-      args: CreateListenerInput,
-      ctx: GraphqlContext
-    ): Promise<CreateListenerResponse> => {
-      const { automationId, listener, prompt, commentReply } = args;
-      const { db } = ctx;
-
+    async createListener(_: any, args: InputArgs, ctx: GraphqlContext) {
       try {
+        const { automationId, listener, prompt, commentReply } = args;
+        const { db } = ctx;
+
+        // Validate input
+        if (!automationId || !listener) {
+          throw new GraphQLError("Missing required fields");
+        }
+
+        // Use a placeholder prompt if none is provided
+        const placeholderPrompt = "No specific instructions provided.";
+        const resolvedPrompt = prompt || placeholderPrompt;
+
         // Check if the related automation exists
         const automationExists = await db
           .select()
@@ -33,34 +39,50 @@ const listenerResolvers = {
           .limit(1);
 
         if (automationExists.length === 0) {
-          throw new Error("Automation not found");
+          throw new GraphQLError("Automation not found");
         }
 
-        // Insert the new listener
-        const newListener = await db.insert(listeners).values({
-          automationId,
-          listener,
-          prompt,
-          commentReply,
-          dmCount: 0, // Default values for dmCount and commentCount
-          commentCount: 0,
-        });
+        // Check if a listener already exists for the automation
+        const existingListener = await db
+          .select()
+          .from(listeners)
+          .where(eq(listeners.automationId, automationId))
+          .limit(1);
+
+        if (existingListener.length > 0) {
+          // Update the existing listener
+          await db
+            .update(listeners)
+            .set({ listener, prompt: resolvedPrompt, commentReply })
+            .where(eq(listeners.automationId, automationId));
+
+          return {
+            success: true,
+            message: "Listener updated successfully.",
+          };
+        }
+
+        // Insert a new listener
+        const newListener = await db
+          .insert(listeners)
+          .values({
+            automationId,
+            listener,
+            prompt: resolvedPrompt,
+          })
+          .returning();
 
         return {
           success: true,
-          message: "Listener created successfully",
+          message: `Listener with ID ${newListener[0].id} created successfully.`,
         };
-      } catch (error: any) {
-        console.error("Error creating listener:", error.message);
+      } catch (error) {
+        console.error("Error creating listener:", error);
         return {
           success: false,
-          message:
-            error.message || "An error occurred while creating the listener",
+          message: error || "Failed to create listener.",
         };
       }
     },
   },
-  Query: {},
 };
-
-export default listenerResolvers;

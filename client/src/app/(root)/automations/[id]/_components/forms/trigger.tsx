@@ -66,6 +66,7 @@ export function TriggerForm({
             onChange={async (val) => {
               if (val === "DM" || val === "COMMENT") {
                 await handleChange(val);
+                field.onChange(val);
               }
             }}
           />

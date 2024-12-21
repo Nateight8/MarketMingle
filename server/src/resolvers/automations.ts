@@ -102,6 +102,11 @@ const automationResolvers = {
           .from(keywords)
           .where(eq(keywords.automationId, id));
 
+        const listenersRecord = await db
+          .select()
+          .from(listeners)
+          .where(eq(listeners.automationId, id));
+
         const userSubscriptionRecord = await db
           .select({ plan: subscriptions.plan }) // Only fetch subscription plan
           .from(subscriptions)
@@ -125,6 +130,7 @@ const automationResolvers = {
         const automationRecord = {
           trigger: triggerRecord[0],
           keywords: keywordsRecord,
+          listener: listenersRecord[0],
         };
 
         console.log("AUTOMATION RECORD: ", automationRecord);

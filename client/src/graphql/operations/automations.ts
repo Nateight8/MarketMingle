@@ -1,6 +1,7 @@
 import { gql } from "@apollo/client";
 import { Trigger } from "./trigger";
 import { keyword } from "./keywords";
+import { Listener } from "./listener";
 
 const automationOperations = {
   Queries: {
@@ -19,9 +20,15 @@ const automationOperations = {
             type
             id
           }
+
           keywords {
             id
             word
+          }
+
+          listener {
+            listener
+            id
           }
         }
       }
@@ -54,6 +61,7 @@ interface GetAutomation {
   getAutomation: {
     trigger: Trigger;
     keywords: keyword[];
+    listener: Listener;
   };
 }
 
