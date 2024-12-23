@@ -28,3 +28,5 @@ export const keywords = gql`
     ): CreateKeywordsPayload!
   }
 `;
+
+// TODO:DELETE KEYWORD

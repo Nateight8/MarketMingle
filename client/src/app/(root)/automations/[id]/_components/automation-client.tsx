@@ -9,6 +9,7 @@ import { KeywordsForm } from "./forms/keywords";
 
 import { ListenerAndMessageForm } from "./forms/listener-message";
 import { Separator } from "@radix-ui/react-select";
+import TriggerNode from "./trigger-node";
 
 interface PageProp {
   id: string;
@@ -44,9 +45,9 @@ export default function AutomationClient({ id: getAutomationId }: PageProp) {
     <div className="">
       {/* Step 1: Trigger Form */}
       <TriggerForm data={triggerData} automationId={getAutomationId} />
-      <div className="h-10 w-full max-w-lg">
-        <Separator />
-      </div>
+
+      <TriggerNode data={triggerData} />
+
       {/* Step 2: Keywords Form */}
       {isTriggerSet && (
         <KeywordsForm

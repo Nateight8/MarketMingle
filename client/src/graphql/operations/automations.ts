@@ -27,7 +27,9 @@ const automationOperations = {
           }
 
           listener {
-            listener
+            commentReply
+            prompt
+            listenßer
             id
           }
         }

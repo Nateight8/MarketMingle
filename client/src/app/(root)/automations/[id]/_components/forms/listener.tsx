@@ -7,6 +7,7 @@ import { useEffect } from "react";
 import { ListenerField } from "../fields/listener";
 import { useMutation } from "@apollo/client";
 import listenerOperations from "@/graphql/operations/listener";
+import automationOperations from "@/graphql/operations/automations";
 
 const FormSchema = z.object({
   listener: z.enum(["SMARTAI", "MESSAGE"]),
@@ -39,14 +40,22 @@ export function ListenerForm({
 
   //NETWORK REQUEST
 
-  const [createLister] = useMutation(
-    listenerOperations.Mutations.createListener
+  const [createListener] = useMutation(
+    listenerOperations.Mutations.createListener,
+    {
+      refetchQueries: [
+        {
+          query: automationOperations.Queries.GetAutomation,
+          variables: { getAutomationId: automationId },
+        },
+      ],
+    }
   );
 
   const handleChange = async (listener: "SMARTAI" | "MESSAGE") => {
     try {
       // Persist the change to the backend
-      await createLister({ variables: { listener, automationId } });
+      await createListener({ variables: { listener, automationId } });
 
       // Update the form state with the new value
       // setValue("listener", listener, { shouldValidate: true });

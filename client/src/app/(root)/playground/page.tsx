@@ -1,49 +1,124 @@
-// "use client";
+"use client";
+import React, { useCallback } from "react";
+import {
+  ReactFlow,
+  useNodesState,
+  useEdgesState,
+  addEdge,
+  Background,
+  Connection,
+} from "@xyflow/react";
 
-// import { Listener } from "../automations/[id]/_components/fields/listener";
-// import Message from "../automations/[id]/_components/fields/message";
-// import Prompt from "../automations/[id]/_components/fields/prompt";
-// import { TriggerField } from "../automations/[id]/_components/fields/trigger-field";
+import "@xyflow/react/dist/style.css";
+import TriggerNode from "./_component/trigger-node";
+import KeywordsNode from "./_component/keywords-node";
+import ListenerNode from "./_component/listener-node";
+import { Form } from "@/components/ui/form";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import MessageNode from "./_component/message-node";
 
-// export default function Page() {
-//   return (
-//     <div className="p-4 md:py-10 grid grid-cols-3 gap-4">
-//       <div className="">
-//         <p className="pb-4">
-//           STEP1: trigger mutation for type, choose between DM or COMMENT
-//           (completes trigger)
-//         </p>
-//         <TriggerField />
-//       </div>
-//       <div className="">
-//         <p className="pb-4">
-//           STEP2: USER fills the keyword field and automatically fulfils the
-//           keyword table (completes keyword)
-//         </p>
-//         keyword
-//       </div>
-//       <div className="">
-//         <p className="pb-4">
-//           STEP3: Listeners table starts to get filled. with the listener(ENUM
-//           SMART OR MESSAGE) field (listner type incomplete)
-//         </p>
-//         <Listener />
-//       </div>
+const nodeTypes = {
+  trigger: TriggerNode,
+  keywords: KeywordsNode,
+  listener: ListenerNode,
+  message: MessageNode,
+};
 
-//       <div className="">
-//         <p className="pb-4">
-//           STEP4: Prompt(for ai) or custom message is required to know clients
-//           action (listner prompt/commentReply complete)
-//         </p>
-//         <Prompt handleNextStep={() => {}} />
-//       </div>
-//       <div className="">
-//         <p className="pb-4">
-//           STEP4: this field and the prompt field should be reusable components
-//         </p>
+const FormSchema = z.object({
+  listener: z.enum(["SMARTAI", "MESSAGE"]),
+  commentReply: z.string().optional(),
+  prompt: z.string().optional(),
+});
 
-//         <Message handleNextStep={() => {}} />
-//       </div>
-//     </div>
-//   );
-// }
+type FormValues = z.infer<typeof FormSchema>;
+
+export default function App() {
+  const form = useForm<z.infer<typeof FormSchema>>({
+    resolver: zodResolver(FormSchema),
+    defaultValues: {
+      listener: undefined,
+      commentReply: "",
+      prompt: "",
+    },
+  });
+
+  async function onSubmit(data: FormValues) {
+    console.log(data);
+  }
+
+  const initialNodes = [
+    {
+      id: "1",
+      position: { x: 0, y: 0 },
+      data: { label: "Hello world" },
+      type: "trigger",
+      style: { width: "100%", maxWidth: "32rem" },
+    },
+
+    {
+      id: "2",
+      position: { x: 300, y: 160 },
+      data: { label: "Hello world" },
+      type: "keywords",
+      style: { width: "100%", maxWidth: "32rem" },
+    },
+
+    {
+      id: "3",
+      position: { x: 600, y: 800 },
+      data: { label: "Hello world" },
+      type: "listener",
+      style: { width: "100%", maxWidth: "32rem" },
+    },
+    {
+      id: "4",
+      position: { x: 300, y: 200 },
+      data: { label: "Hello world" },
+      type: "message",
+      style: { width: "100%", maxWidth: "32rem" },
+    },
+  ];
+
+  const initialEdges = [
+    { id: "e1-2", source: "", target: "2", animated: true },
+    { id: "e1-3", source: "2", target: "3", animated: true },
+  ];
+
+  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
+  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+
+  const onConnect = useCallback(
+    (params: Connection) => {
+      console.log("CONNECTED");
+
+      setEdges((eds) => addEdge(params, eds));
+    },
+    [setEdges]
+  );
+
+  return (
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="space-y-6  w-full"
+      >
+        <div style={{ width: "100%", height: "100vh" }}>
+          <ReactFlow
+            nodes={nodes}
+            edges={edges}
+            onNodesChange={onNodesChange}
+            onEdgesChange={onEdgesChange}
+            onConnect={onConnect}
+            nodeTypes={nodeTypes}
+            panOnDrag={false}
+            zoomOnScroll={false}
+          >
+            <Background />
+          </ReactFlow>
+        </div>
+      </form>
+    </Form>
+  );
+}

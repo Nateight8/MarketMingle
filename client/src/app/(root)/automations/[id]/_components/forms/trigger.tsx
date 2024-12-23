@@ -7,6 +7,9 @@ import { TriggerField } from "../fields/trigger-field";
 import { useMutation } from "@apollo/client";
 import triggerOperations from "@/graphql/operations/trigger";
 import { useEffect } from "react";
+import automationOperations, {
+  GetAutomation,
+} from "@/graphql/operations/automations";
 
 const FormSchema = z.object({
   trigger: z.enum(["DM", "COMMENT"]),
@@ -25,7 +28,29 @@ export function TriggerForm({
   data: "DM" | "COMMENT" | undefined;
 }) {
   const [createTrigger] = useMutation(
-    triggerOperations.Mutations.createTrigger
+    triggerOperations.Mutations.createTrigger,
+    {
+      update(cache, { data: { createTrigger } }) {
+        const existingData = cache.readQuery<GetAutomation>({
+          query: automationOperations.Queries.GetAutomation,
+          variables: { getAutomationId: automationId },
+        });
+
+        const updatedData = {
+          ...existingData,
+          getAutomation: {
+            ...existingData?.getAutomation,
+            trigger: createTrigger.trigger, // Update trigger field
+          },
+        };
+
+        cache.writeQuery({
+          query: automationOperations.Queries.GetAutomation,
+          variables: { getAutomationId: automationId },
+          data: updatedData,
+        });
+      },
+    }
   );
 
   // console.log(data);

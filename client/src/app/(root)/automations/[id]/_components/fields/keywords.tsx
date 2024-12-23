@@ -8,7 +8,7 @@ import { useState, useEffect } from "react";
 import { ControllerRenderProps } from "react-hook-form";
 
 interface KeywordProps extends ControllerRenderProps {
-  loading: boolean;
+  // loading: boolean;
   // Add any additional props here if needed
 }
 
@@ -75,7 +75,7 @@ export default function Keyword({ onChange, value }: KeywordProps) {
         />
       </div>
       <div className="mt-4">
-        <Button className="w-full" type="submit">
+        <Button variant="outline" className="w-full" type="submit">
           <IconDeviceFloppy /> save progress
         </Button>
       </div>

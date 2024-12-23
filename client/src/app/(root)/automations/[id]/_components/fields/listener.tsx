@@ -1,4 +1,5 @@
 "use client";
+
 import { forwardRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -7,7 +8,6 @@ import {
   IconBrandHipchat,
   IconRobot,
   IconBrandTelegram,
-  IconPlus,
 } from "@tabler/icons-react";
 
 import {
@@ -18,15 +18,15 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-interface TriggerProps {
+interface ListenerFieldProps {
   value?: string;
   onChange?: (value: string) => void;
 }
 
-export const ListenerField = forwardRef<HTMLButtonElement, TriggerProps>(
+export const ListenerField = forwardRef<HTMLButtonElement, ListenerFieldProps>(
   ({ value, onChange }, ref) => {
     useEffect(() => {
-      console.log("TriggerField value:", value);
+      console.log("ListenerField value:", value);
     }, [value]);
 
     return (
@@ -35,7 +35,7 @@ export const ListenerField = forwardRef<HTMLButtonElement, TriggerProps>(
           background:
             "linear-gradient(180deg, rgba(15,15,16,0.8) 80%, rgba(20,33,48,0.4) 100%)",
         }}
-        className="w-full p-3 max-w-lg border border-border/60 relative overflow-hidden rounded-2xl"
+        className="w-full p-3 border border-border/60 relative overflow-hidden rounded-2xl"
       >
         <div className="flex items-center space-x-2">
           <div className="bg-blue-600 size-5 flex items-center justify-center rounded-full">
@@ -74,9 +74,8 @@ export const ListenerField = forwardRef<HTMLButtonElement, TriggerProps>(
               <SelectItem value="SMARTAI">
                 <div className="flex items-center space-x-2 p-2">
                   <IconRobot />
-
                   <p className="text-sm text-muted-foreground">
-                    Smart Ai do the talking
+                    Smart AI do the talking
                   </p>
                 </div>
               </SelectItem>
@@ -88,7 +87,6 @@ export const ListenerField = forwardRef<HTMLButtonElement, TriggerProps>(
               <SelectItem value="MESSAGE">
                 <div className="flex items-center space-x-2 p-2">
                   <IconBrandTelegram />
-
                   <p className="text-sm text-muted-foreground">
                     Send a custom message
                   </p>
