@@ -1,4 +1,5 @@
-import AutomationClient from "./_components/client";
+import { ReactFlowProvider } from "@xyflow/react";
+import AutomationClient from "./_component/automation-client";
 
 interface PageProp {
   params: {
@@ -10,8 +11,10 @@ export default async function Page({ params }: PageProp) {
   const id = await params.id;
 
   return (
-    <div className="p-4 md:py-10">
-      <AutomationClient id={id} />
+    <div className="">
+      <ReactFlowProvider>
+        <AutomationClient id={id} />
+      </ReactFlowProvider>
     </div>
   );
 }

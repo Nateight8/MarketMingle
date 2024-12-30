@@ -23,14 +23,9 @@ const listenerOperations = {
   },
 };
 
-enum ListenerEnum {
-  SMARTAI = "SMARTAI",
-  MESSAGE = "MESSAGE",
-}
-
 interface Listener {
   automationId: string;
-  listener: ListenerEnum;
+  listener: "SMARTAI" | "MESSAGE";
   prompt?: string;
   commentReply?: string;
 }

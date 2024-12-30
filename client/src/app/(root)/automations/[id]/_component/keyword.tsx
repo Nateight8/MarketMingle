@@ -45,7 +45,7 @@ export default function Keyword({ onChange, value }: KeywordProps) {
     >
       <div className="space-y-2">
         <Label htmlFor="input-57" className="text-sm text-muted-foreground">
-          What keyword(s)?
+          Comments like...
         </Label>
         <TagInput
           id="input-57"
@@ -58,7 +58,7 @@ export default function Keyword({ onChange, value }: KeywordProps) {
             setExampleTags(updatedTags);
             onChange(updatedTags.map(({ id, text }) => ({ id, word: text }))); // Update form state
           }}
-          placeholder="Add a keyword or two..."
+          placeholder="Add one or two keywords..."
           styleClasses={{
             inlineTagsContainer:
               "border-input rounded-lg bg-background shadow-sm shadow-black/5 transition-shadow focus-within:border-ring focus-within:outline-none focus-within:ring-[3px] focus-within:ring-ring/20 p-1 gap-1",

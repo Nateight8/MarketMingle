@@ -3,7 +3,7 @@ import { gql } from "graphql-tag";
 const automationTypeDefs = gql`
   type Automation {
     id: ID!
-    # name: String
+    name: String
     # createdAt: String
     # active: Boolean
     # userId: ID!
@@ -15,6 +15,11 @@ const automationTypeDefs = gql`
 
   type AutomationResponse {
     id: ID
+  }
+
+  type AutomationUpdateResponse {
+    message: String
+    success: Boolean
   }
 
   type Query {
@@ -29,10 +34,21 @@ const automationTypeDefs = gql`
       userId: ID!
     ): AutomationResponse
 
-    # updateAutomation(id: ID!, name: String, active: Boolean): Automation
+    updateAutomation(
+      id: ID!
+      name: String!
+      active: Boolean
+    ): AutomationUpdateResponse
 
     # deleteAutomation(id: ID!): Boolean
   }
 `;
 
+interface UpdateAutomationArgs {
+  id: string;
+  name: string;
+  active: boolean;
+}
+
 export default automationTypeDefs;
+export type { UpdateAutomationArgs };

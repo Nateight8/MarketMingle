@@ -23,12 +23,8 @@ interface ListenerFieldProps {
   onChange?: (value: string) => void;
 }
 
-export const ListenerField = forwardRef<HTMLButtonElement, ListenerFieldProps>(
+export const Listener = forwardRef<HTMLButtonElement, ListenerFieldProps>(
   ({ value, onChange }, ref) => {
-    useEffect(() => {
-      console.log("ListenerField value:", value);
-    }, [value]);
-
     return (
       <div
         style={{
@@ -100,4 +96,4 @@ export const ListenerField = forwardRef<HTMLButtonElement, ListenerFieldProps>(
   }
 );
 
-ListenerField.displayName = "ListenerField";
+Listener.displayName = "Listener";

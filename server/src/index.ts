@@ -10,6 +10,7 @@ import { ExpressAuth, getSession } from "@auth/express";
 import { authConfig } from "./config/auth.config.js";
 import { currentSession } from "./middleware/auth.middleware.js";
 import { db } from "./db/index.js";
+import instagramRouter from "./webhooks/instagram.js";
 
 interface MyContext {
   token?: String;
@@ -29,6 +30,12 @@ app.use(currentSession);
 // Set up ExpressAuth to handle authentication
 // IMPORTANT: It is highly encouraged set up rate limiting on this route
 app.use("/api/auth/*", ExpressAuth(authConfig));
+
+// Add webhook endpoint
+// app.post("/webhooks/instagram", instagramWebhookRouter);
+app.use("/webhooks/instagram", instagramRouter);
+
+console.log("Instagram Webhook Route Not Mounted");
 
 const server = new ApolloServer<MyContext>({
   typeDefs,

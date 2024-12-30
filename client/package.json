@@ -46,6 +46,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.0.0",
+    "dagre": "^0.8.5",
     "date-fns": "^4.1.0",
     "dotenv": "^16.4.7",
     "drizzle-orm": "^0.37.0",
@@ -74,6 +75,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@types/dagre": "^0.7.52",
     "@types/node": "^20",
     "@types/pg": "^8.11.10",
     "@types/react": "^18",

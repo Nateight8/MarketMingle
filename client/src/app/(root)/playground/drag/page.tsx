@@ -7,23 +7,18 @@ import {
   addEdge,
   Background,
   Connection,
+  Panel,
 } from "@xyflow/react";
 
 import "@xyflow/react/dist/style.css";
-import TriggerNode from "../automations/[id]/_component/trigger-node";
-import KeywordsNode from "../automations/[id]/_component/keywords-node";
-import ListenerNode from "../automations/[id]/_component/listener-node";
+
 import { Form } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import MessageNode from "../automations/[id]/_component/message-node";
 
 const nodeTypes = {
-  trigger: TriggerNode,
-  keywords: KeywordsNode,
-  listener: ListenerNode,
-  message: MessageNode,
+  //herer for nodesd
 };
 
 const FormSchema = z.object({
@@ -99,26 +94,22 @@ export default function App() {
   );
 
   return (
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-6  w-full"
+    <div style={{ width: "100%", height: "100vh" }}>
+      <ReactFlow
+        nodes={nodes}
+        edges={edges}
+        onNodesChange={onNodesChange}
+        onEdgesChange={onEdgesChange}
+        onConnect={onConnect}
+        nodeTypes={nodeTypes}
+        panOnDrag={false}
+        zoomOnScroll={false}
       >
-        <div style={{ width: "100%", height: "100vh" }}>
-          <ReactFlow
-            nodes={nodes}
-            edges={edges}
-            onNodesChange={onNodesChange}
-            onEdgesChange={onEdgesChange}
-            onConnect={onConnect}
-            nodeTypes={nodeTypes}
-            panOnDrag={false}
-            zoomOnScroll={false}
-          >
-            <Background />
-          </ReactFlow>
-        </div>
-      </form>
-    </Form>
+        <Background />
+        <Panel position="top-right">
+          <div className="w-60 h-60 bg-background">Hello world</div>
+        </Panel>
+      </ReactFlow>
+    </div>
   );
 }

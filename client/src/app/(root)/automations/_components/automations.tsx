@@ -8,7 +8,7 @@ import { AutomationCard } from "./automation-card";
 import AutomationButton from "@/components/automation-button";
 import { IconPlus } from "@tabler/icons-react";
 
-export default function AutomationClient() {
+export default function Automations() {
   const { data } = useQuery<ListUserAutomations>(
     automationOperations.Queries.ListUserAutomations
   );

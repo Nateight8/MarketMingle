@@ -1,18 +1,23 @@
 import { gql } from "graphql-tag";
 
 const postTypeDefs = gql`
+  enum MediaType {
+    IMAGE
+    CAROUSEL_ALBUM
+    TEXT
+  }
+
   type Post {
-    id: String
-    title: String
-    username: String
+    id: ID!
+    postid: String!
+    caption: String
+    media: String!
+    mediaType: MediaType!
+    automationId: ID!
   }
 
   type Query {
-    getAllPosts: [Post]
-  }
-
-  type Mutation {
-    createPost(title: String, username: String): Post
+    getSocialPosts: [Post!]!
   }
 `;
 

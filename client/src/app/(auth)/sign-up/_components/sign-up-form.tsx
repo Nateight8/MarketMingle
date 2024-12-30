@@ -46,7 +46,12 @@ export function SignUpForm() {
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <Input autoComplete="off" placeholder="Full name" {...field} />
+                <Input
+                  className="h-12"
+                  autoComplete="off"
+                  placeholder="Full name"
+                  {...field}
+                />
               </FormControl>
             </FormItem>
           )}
@@ -57,7 +62,12 @@ export function SignUpForm() {
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <Input autoComplete="off" placeholder="Email" {...field} />
+                <Input
+                  className="h-12"
+                  autoComplete="off"
+                  placeholder="Email"
+                  {...field}
+                />
               </FormControl>
             </FormItem>
           )}

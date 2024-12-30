@@ -3,13 +3,13 @@ import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 
-import { TriggerField } from "../fields/trigger-field";
 import { useMutation } from "@apollo/client";
 import triggerOperations from "@/graphql/operations/trigger";
 import { useEffect } from "react";
 import automationOperations, {
   GetAutomation,
 } from "@/graphql/operations/automations";
+import { TriggerField } from "./trigger-field";
 
 const FormSchema = z.object({
   trigger: z.enum(["DM", "COMMENT"]),
@@ -22,10 +22,12 @@ type FormValues = z.infer<typeof FormSchema>;
 */
 export function TriggerForm({
   automationId,
-  data,
+  triggerData: data,
+  automationName,
 }: {
   automationId: string;
-  data: "DM" | "COMMENT" | undefined;
+  triggerData: "DM" | "COMMENT" | undefined;
+  automationName: string;
 }) {
   const [createTrigger] = useMutation(
     triggerOperations.Mutations.createTrigger,
@@ -53,8 +55,6 @@ export function TriggerForm({
     }
   );
 
-  // console.log(data);
-
   const { control, handleSubmit, setValue } = useForm<FormValues>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -81,12 +81,13 @@ export function TriggerForm({
   };
 
   return (
-    <form onSubmit={handleSubmit(() => {})}>
+    <form className="w-full">
       <Controller
         name="trigger"
         control={control}
         render={({ field }) => (
           <TriggerField
+            automationName={automationName}
             value={field.value}
             onChange={async (val) => {
               if (val === "DM" || val === "COMMENT") {

@@ -16,6 +16,7 @@ const automationOperations = {
     GetAutomation: gql`
       query GetAutomation($getAutomationId: ID!) {
         getAutomation(id: $getAutomationId) {
+          name
           trigger {
             type
             id
@@ -29,7 +30,7 @@ const automationOperations = {
           listener {
             commentReply
             prompt
-            listenßer
+            listener
             id
           }
         }
@@ -42,6 +43,15 @@ const automationOperations = {
       mutation CreateAutomation($userId: ID!) {
         createAutomation(userId: $userId) {
           id
+        }
+      }
+    `,
+
+    UpdateAutomation: gql`
+      mutation UpdateAutomation($automationId: ID!, $name: String!) {
+        updateAutomation(id: $automationId, name: $name) {
+          message
+          success
         }
       }
     `,
@@ -61,11 +71,14 @@ interface ListUserAutomations {
 
 interface GetAutomation {
   getAutomation: {
+    name: string;
     trigger: Trigger;
     keywords: keyword[];
     listener: Listener;
   };
 }
+
+interface UpdateAutomation {}
 
 export default automationOperations;
 export type { ListUserAutomations, AutomationProps, GetAutomation };

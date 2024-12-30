@@ -8,17 +8,20 @@ export const integrationsTypeDefs = gql`
 
   type Integration {
     id: ID!
-    name: IntegrationName!
+    name: String!
     createdAt: String!
     userId: ID!
     token: String!
     expiresAt: String
     instagramId: String
-    listener: Listener
   }
 
-  # Queries related to integrations
-  #   type Query {
-  #     getUserIntegrations(userId: ID!): [Integration!]!
-  #   }
+  type InstagramAuthResponse {
+    redirectUrl: String!
+  }
+
+  type Mutation {
+    redirectToInstagramOAuth: InstagramAuthResponse!
+    integrateWithInstagram(code: String!): Integration!
+  }
 `;

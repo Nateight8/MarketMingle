@@ -20,13 +20,12 @@ import {
 interface TriggerProps {
   value?: string;
   onChange?: (value: string) => void;
+  automationName: string;
 }
 
 export const TriggerField = forwardRef<HTMLButtonElement, TriggerProps>(
-  ({ value, onChange }, ref) => {
-    useEffect(() => {
-      console.log("TriggerField value:", value);
-    }, [value]);
+  ({ value, onChange, automationName }, ref) => {
+    useEffect(() => {}, [value]);
 
     return (
       <div
@@ -46,7 +45,10 @@ export const TriggerField = forwardRef<HTMLButtonElement, TriggerProps>(
         </div>
         <div className="mt-8">
           <Select value={value} onValueChange={onChange}>
-            <SelectTrigger asChild>
+            <SelectTrigger
+              disabled={automationName.toLowerCase() === "untitled"}
+              asChild
+            >
               <Button
                 ref={ref}
                 variant="outline"

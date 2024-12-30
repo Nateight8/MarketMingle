@@ -29,7 +29,7 @@ export default function InputPassword({
         <Input
           {...field}
           id="input-23"
-          className="pe-9"
+          className="pe-9 h-12"
           placeholder="Password"
           type={isVisible ? "text" : "password"}
           autoComplete="off"

@@ -6,11 +6,11 @@ import {
   integrations,
   keywords,
   listeners,
-  posts,
   subscriptions,
   triggers,
   users,
 } from "../db/schema.js";
+import { UpdateAutomationArgs } from "../typeDefs/automations.js";
 
 const automationResolvers = {
   Query: {
@@ -128,6 +128,7 @@ const automationResolvers = {
         console.log("KEYWORDS HERE", keywordsRecord);
 
         const automationRecord = {
+          name: automation[0].name,
           trigger: triggerRecord[0],
           keywords: keywordsRecord,
           listener: listenersRecord[0],
@@ -200,18 +201,70 @@ const automationResolvers = {
         });
       }
     },
-  },
 
-  //   Automation: {
-  //     // Resolve the user field in Automation
-  //     user: async (
-  //       parent: { userId: string },
-  //       _: any,
-  //       context: GraphqlContext
-  //     ) => {
-  //       // Logic to resolve the user field for an automation
-  //     },
-  //   },
+    updateAutomation: async (
+      _: any,
+      args: UpdateAutomationArgs,
+      context: GraphqlContext
+    ) => {
+      const { db, session } = context;
+      const { active, id, name } = args;
+
+      const user = session.user;
+
+      if (!user || !user?.id) {
+        console.error("User not authenticated, session data:", session);
+        throw new GraphQLError("Not authenticated", {
+          extensions: {
+            code: "UNAUTHORIZED",
+          },
+        });
+      }
+
+      const userId = user.id;
+
+      if (!id) {
+        throw new GraphQLError("Automation ID is required", {
+          extensions: {
+            code: "BAD_USER_INPUT",
+          },
+        });
+      }
+
+      try {
+        const updatedAutomation = await db
+          .update(automations)
+          .set({
+            name,
+            active: active === undefined ? false : Boolean(active),
+          })
+          .where(eq(automations.id, id))
+          .returning();
+
+        if (!updatedAutomation.length) {
+          throw new GraphQLError("Automation not found or update failed", {
+            extensions: {
+              code: "NOT_FOUND",
+            },
+          });
+        }
+
+        return {
+          message: "Successfully updated",
+          success: true,
+          automation: updatedAutomation[0],
+        };
+      } catch (error) {
+        console.error("Error updating automation:", error);
+
+        throw new GraphQLError("Failed to update automation", {
+          extensions: {
+            code: "INTERNAL_SERVER_ERROR",
+          },
+        });
+      }
+    },
+  },
 };
 
 export default automationResolvers;

@@ -1,11 +1,12 @@
 import { auth } from "@/auth";
-import AutomationClient from "./_components/automation-client";
+
 import { redirect } from "next/navigation";
+import Automations from "./_components/automations";
 
 export default async function Page() {
   const session = await auth();
 
   if (!session || !session.user?.id) redirect("/sign-in");
 
-  return <AutomationClient />;
+  return <Automations />;
 }

@@ -23,10 +23,6 @@ const FormSchema = z.object({
 });
 
 export function SignInForm() {
-  const [createPost, { data, loading, error }] = useMutation(
-    postOperations.Mutations.createPost
-  );
-
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -39,8 +35,6 @@ export function SignInForm() {
     console.log(data);
 
     const { email: title, password: username } = data;
-
-    await createPost({ variables: { title, username } });
   }
 
   return (
@@ -52,7 +46,12 @@ export function SignInForm() {
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <Input autoComplete="off" placeholder="Full name" {...field} />
+                <Input
+                  className="h-12"
+                  autoComplete="off"
+                  placeholder="Full name"
+                  {...field}
+                />
               </FormControl>
             </FormItem>
           )}
